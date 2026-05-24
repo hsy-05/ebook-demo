@@ -1,48 +1,73 @@
+/* ==========================================================================
+   1. 全域變數與重設 (Reset & Theme Variables)
+   ========================================================================== */
 :root {
-    --bg-space: #1A1A2E;
-    --bubble-bg: #FFFFFF;
-    --text-dark: #2C3E50;
-    --border-radius-heavy: 30px;
-    --primary-theme: #00ADB5;
+    --bg-sky: #5a99c6;
+    --bg-grass: #AED581;
+    --color-primary: #934730;
+    --color-bubble: #FFFFFF;
+    --color-text-dark: #37474F;
+    --color-btn-default: #FFF176;
+    --color-btn-hover: #FFF59D;
+    --color-btn-border: #FBC02D;
+    
+    /* 重新開始按鈕與怪獸頁面完全同步的綠色系配置 */
+    --color-restart: #4CAF50;
+    --color-restart-shadow: #388E3C;
+    
+    --font-family: 'Comic Sans MS', 'Chalkboard SE', 'Microsoft JhengHei', sans-serif;
+    --radius-large: 24px;
+    --radius-small: 16px;
+    
+    --shadow-soft: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --shadow-btn: 0 6px 0px var(--color-border-shadow, #F57F17);
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    user-select: none;
-    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: 'Arial Rounded MT Bold', 'Comic Sans MS', sans-serif;
-    background-color: #222222;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    font-family: var(--font-family);
+    background: linear-gradient(180deg, var(--bg-sky) 0%, #E8F9FD 100%);
+    color: var(--color-text-dark);
     overflow: hidden;
-}
-
-/* 核心容器：改用 Grid 配置高度，嚴格規範每一層的最大佔用範圍，防止爆版 */
-.ebook-container {
     width: 100vw;
     height: 100vh;
-    background: radial-gradient(circle, #222831 0%, var(--bg-space) 100%);
-    position: relative;
-    display: grid;
-    /* 垂直高度配給：導覽列(自動)、題目(自動)、中間舞台(剩餘全部範圍)、底層按鈕區(自動) */
-    grid-template-rows: auto auto 1fr auto;
-    padding: 20px;
-    gap: 15px;
-    overflow: hidden;
 }
 
+/* ==========================================================================
+   2. 主舞台骨架與響應式約束 (Layout Container)
+   ========================================================================== */
+.ebook-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    padding: 20px 20px 0 20px;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+/* 跨頁面導覽列：修改為兩端對齊，騰出空間給重新開始按鈕 */
 .page-navigation {
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    z-index: 100;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    z-index: 10;
+}
+
+/* 整合網頁連結容器 */
+.route-links {
+    display: flex;
+    gap: 15px;
 }
 
 .nav-link {
@@ -58,221 +83,290 @@ body {
 }
 
 .nav-link.active {
-    background-color: var(--primary-theme);
-    box-shadow: 0 5px 0px #006064;
+    background-color: var(--color-primary);
+    box-shadow: 0 5px 0px #B33F00;
     transform: translateY(-2px);
 }
 
+/* 重新開始按鈕：與怪獸頁面完全對齊的 3D 外觀 */
+.control-btn {
+    background-color: var(--color-restart);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 20px;
+    box-shadow: 0 5px 0px var(--color-restart-shadow);
+    cursor: pointer;
+    font-family: var(--font-family);
+    transition: all 0.15s ease;
+}
+
+.control-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0px var(--color-restart-shadow);
+}
+
+/* ==========================================================================
+   3. 遊戲狀態與題目發問區 (Header & Speech Bubble)
+   ========================================================================== */
 .game-header {
     width: 100%;
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
 }
 
 .level-indicator {
-    background-color: var(--primary-theme);
-    color: #FFFFFF;
-    padding: 3px 12px;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    background-color: var(--color-primary);
+    color: white;
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 .speech-bubble {
-    background: var(--bubble-bg);
-    border: 5px solid var(--primary-theme);
-    padding: 12px 25px;
-    border-radius: var(--border-radius-heavy);
-    font-size: 1.6rem;
+    background-color: var(--color-bubble);
+    border-radius: var(--radius-large);
+    padding: 15px 30px;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: var(--text-dark);
-    box-shadow: 0 6px 0px rgba(0,0,0,0.1);
-    text-align: center;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    max-width: 90%;
+    border: 3px solid #ECEFF1;
 }
 
 #target-number-display {
-    font-size: 2.3rem;
-    color: #FF5722;
-    background: #FFF5E4;
-    padding: 0 15px;
-    border-radius: 10px;
+    color: #e61919;
+    font-size: 2.5rem;
+    margin: 0 5px;
+    vertical-align: middle;
 }
 
-/* 中間動畫舞台：允許在 Grid 約束下自由伸縮，絕不向外推擠其他元件 */
+/* 移除原本寫在 JS 裡的內聯 style，收納至此樣式類別 */
+.game-complete-text {
+    color: #00ADB5;
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+/* ==========================================================================
+   4. 火車軌道與動畫舞台區 (Adventure Stage)
+   ========================================================================== */
 .bear-adventure-stage {
-    display: flex;
     width: 100%;
+    flex-grow: 1;
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 40px;
-    min-height: 100px;
+    padding: 20px 0;
 }
 
 .adventure-track {
     width: 100%;
-    max-width: 800px;
-    height: 100px;
-    background-color: #393E46;
-    border: 6px solid var(--primary-theme);
-    border-radius: 50px;
+    height: 160px;
+    background-color: var(--bg-grass);
+    border-radius: var(--radius-large);
     position: relative;
-    display: flex;
-    align-items: center;
-    box-shadow: inset 0 6px 10px rgba(0,0,0,0.5);
+    box-shadow: inset 0 -10px 0px rgba(0,0,0,0.05);
+    border-bottom: 8px solid #7CB342;
+}
+
+.adventure-track::before {
+    content: "";
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    top: 65%;
+    height: 8px;
+    background: repeating-linear-gradient(90deg, #8D6E63, #8D6E63 10px, #5D4037 10px, #5D4037 20px);
+    border-radius: 4px;
 }
 
 .train-token {
-    width: 110px;
-    height: 110px;
     position: absolute;
-    left: 20px;
-    bottom: -5px;
-    transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 10;
+    bottom: 25px;
+    left: 5%;
+    transition: left 1s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 2;
 }
 
 .train-token img {
-    width: 100%;
-    height: 100%;
+    width: 110px;
+    height: auto;
     object-fit: contain;
 }
 
 .bear-home-target {
-    width: 130px;
-    height: 130px;
     position: absolute;
-    right: -20px;
-    top: -20px;
+    bottom: 25px;
+    right: 5%;
+    z-index: 1;
 }
 
 .bear-home-target img {
-    width: 100%;
-    height: 100%;
+    width: 130px;
+    height: auto;
     object-fit: contain;
 }
 
-/* 下方選擇答案區：利用 align-self 讓區塊在手機板完美靠底浮動 */
+/* ==========================================================================
+   5. 下方答案選擇區與兒童友善按鈕 (Keyboard Zone & Buttons)
+   ========================================================================== */
 .letter-keyboard-zone {
     width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.1);
-    border: 4px solid var(--primary-theme);
-    border-radius: var(--border-radius-heavy);
-    padding: 15px;
     text-align: center;
-    align-self: end; 
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 15px;
+    border-radius: var(--radius-large) var(--radius-large) 0 0;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
 }
 
 .guide-text {
     font-size: 1.1rem;
-    color: #EEEEEE;
-    margin-bottom: 8px;
+    color: #546E7A;
+    margin-bottom: 12px;
+    font-weight: bold;
 }
 
 .letter-button-row {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    min-height: 80px;
     align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .kids-alpha-btn {
-    min-width: 140px;
-    height: 70px;
-    font-size: 1.8rem;
-    font-weight: bold;
-    background-color: #FFFFFF;
-    color: #393E46;
-    border: 5px solid var(--primary-theme);
-    border-radius: 20px;
+    flex: 1;
+    min-height: 65px;
+    font-family: var(--font-family);
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--color-text-dark);
+    background-color: var(--color-btn-default);
+    border: 3px solid var(--color-btn-border);
+    border-radius: var(--radius-small);
     cursor: pointer;
-    box-shadow: 0 6px 0px #006064;
-    transition: all 0.1s ease;
+    box-shadow: var(--shadow-btn);
+    position: relative;
+    transform: translateY(0px);
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.3s;
+}
+
+.kids-alpha-btn:hover {
+    background-color: var(--color-btn-hover);
 }
 
 .kids-alpha-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0px #006064;
+    transform: translateY(6px);
+    box-shadow: 0 0px 0px transparent;
 }
 
-.shake-animation {
-    animation: shake 0.5s ease-in-out;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-10px); }
-    40%, 80% { transform: translateX(10px); }
+/* 答對時被 JS 賦予的狀態樣式類別（抽離內聯樣式） */
+.kids-alpha-btn.correct-state {
+    background-color: #65B741;
+    border-color: #65B741;
+    color: #FFFFFF;
 }
 
 /* ==========================================================================
-   響應式中斷點 (4K - 320px 完整防禦)
+   6. 動態特效與動畫庫 (Animations)
+   ========================================================================== */
+.shake-animation {
+    animation: trainShake 0.5s ease-in-out;
+}
+
+@keyframes trainShake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    20%, 60% { transform: translateX(-10px) rotate(-5deg); }
+    40%, 80% { transform: translateX(10px) rotate(5deg); }
+}
+
+/* ==========================================================================
+   7. 全方位斷點響應式設計 (RWD Media Queries)
    ========================================================================== */
 
-/* 4K 超大型螢幕 */
-@media (min-width: 2560px) {
-    .ebook-container { max-width: 1920px; max-height: 1080px; margin: auto; border-radius: 20px; gap: 25px; }
-    .speech-bubble { font-size: 2.5rem; }
-    .adventure-track { height: 120px; }
-    .train-token { width: 140px; height: 140px; }
-    .bear-home-target { width: 160px; height: 160px; top: -30px; }
-    .kids-alpha-btn { min-width: 180px; height: 90px; font-size: 2.5rem; }
+/* 【4K 超大型螢幕】 2560px 以上 */
+@media screen and (min-width: 2560px) {
+    .ebook-container { max-width: 2200px; padding: 60px; }
+    .speech-bubble { font-size: 2.5rem; padding: 30px 60px; }
+    #target-number-display { font-size: 4rem; }
+    .adventure-track { height: 260px; }
+    .train-token img { width: 200px; }
+    .bear-home-target img { width: 240px; }
+    .kids-alpha-btn { min-height: 100px; font-size: 2.8rem; }
+    .guide-text { font-size: 2rem; }
+    .level-indicator { font-size: 2rem; }
+    .nav-link, .control-btn { padding: 16px 40px; font-size: 2rem; border-radius: 35px; box-shadow: 0 10px 0px #757575; }
+    .nav-link.active { box-shadow: 0 10px 0px #B33F00; }
+    .control-btn { box-shadow: 0 10px 0px var(--color-restart-shadow); }
 }
 
-/* 大型筆記型電腦 */
-@media (max-width: 1440px) {
-    .ebook-container { padding: 15px; gap: 12px; }
+/* 【一般筆記型電腦】 1024px 以下 */
+@media screen and (max-width: 1024px) {
+    .speech-bubble { font-size: 1.3rem; }
+    #target-number-display { font-size: 2rem; }
+    .train-token img { width: 95px; }
+    .bear-home-target img { width: 115px; }
+    .nav-link, .control-btn { font-size: 1.1rem; padding: 8px 20px; }
 }
 
-/* 筆記型電腦 */
-@media (max-width: 1024px) {
-    .speech-bubble { font-size: 1.4rem; }
-    .adventure-track { height: 90px; }
-    .train-token { width: 100px; height: 100px; }
+/* 【平板電腦】 768px 以下 */
+@media screen and (max-width: 768px) {
+    .ebook-container { padding: 15px; }
+    .adventure-track { height: 130px; }
+    .train-token { bottom: 15px; }
+    .train-token img { width: 80px; }
+    .bear-home-target { bottom: 15px; }
+    .bear-home-target img { width: 95px; }
+    .kids-alpha-btn { font-size: 1.4rem; min-height: 55px; }
 }
 
-/* 平板電腦 */
-@media (max-width: 768px) {
-    .ebook-container { padding: 12px; gap: 10px; }
-    .speech-bubble { font-size: 1.2rem; padding: 10px 20px; }
-    .adventure-track { height: 80px; }
-    .train-token { width: 80px; height: 80px; }
-    .bear-home-target { width: 100px; height: 100px; top: -15px; }
-    .kids-alpha-btn { min-width: 110px; height: 60px; font-size: 1.4rem; }
+/* 【大型手機】 425px 以下 */
+@media screen and (max-width: 425px) {
+    .page-navigation { flex-direction: column; gap: 10px; }
+    .route-links { width: 100%; justify-content: center; }
+    .control-btn { width: 80%; text-align: center; padding: 6px 15px; font-size: 1rem; }
+    .speech-bubble { font-size: 1.1rem; padding: 10px 20px; }
+    #target-number-display { font-size: 1.6rem; }
+    .adventure-track { height: 100px; }
+    .train-token { bottom: 10px; }
+    .train-token img { width: 55px; }
+    .bear-home-target { bottom: 10px; }
+    .bear-home-target img { width: 65px; }
+    .letter-button-row { gap: 10px; }
+    .kids-alpha-btn { font-size: 1.1rem; min-height: 50px; }
+    .guide-text { font-size: 0.9rem; margin-bottom: 8px; }
+    .nav-link { font-size: 1rem; padding: 6px 15px; }
 }
 
-/* 大型手機 (防遮擋關鍵縮減) */
-@media (max-width: 425px) {
-    .ebook-container { padding: 8px; gap: 8px; }
-    .nav-link { font-size: 1rem; padding: 8px 16px; border-radius: 15px; }
-    .speech-bubble { font-size: 1rem; padding: 8px 15px; border-width: 3px; border-radius: 20px; }
-    #target-number-display { font-size: 1.5rem; padding: 0 8px; }
-    .bear-adventure-stage { min-height: 70px; padding: 0 15px; }
-    .adventure-track { height: 50px; border-width: 3px; }
-    .train-token { width: 55px; height: 55px; left: 10px; bottom: -2px; }
-    .bear-home-target { width: 70px; height: 70px; right: -10px; top: -15px; }
-    .letter-keyboard-zone { padding: 10px; border-width: 3px; border-radius: 20px; }
-    .guide-text { font-size: 0.9rem; margin-bottom: 6px; }
-    .letter-button-row { min-height: 50px; gap: 12px; }
-    .kids-alpha-btn { min-width: 80px; height: 46px; font-size: 1.1rem; border-width: 3px; border-radius: 12px; box-shadow: 0 3px 0px #006064; }
+/* 【中型手機】 375px 以下 */
+@media screen and (max-width: 375px) {
+    .speech-bubble { font-size: 1rem; }
+    .kids-alpha-btn { font-size: 1rem; border-width: 2px; }
+    .level-indicator { font-size: 1rem; }
 }
 
-/* 中型手機 */
-@media (max-width: 375px) {
-    .kids-alpha-btn { min-width: 75px; height: 42px; font-size: 1rem; }
-}
-
-/* 小型手機 */
-@media (max-width: 320px) {
-    .ebook-container { gap: 5px; }
-    .speech-bubble { font-size: 0.85rem; padding: 6px 12px; }
-    #target-number-display { font-size: 1.2rem; }
-    .adventure-track { height: 40px; }
-    .train-token { width: 45px; height: 45px; }
-    .bear-home-target { width: 55px; height: 55px; }
-    .letter-button-row { gap: 8px; }
-    .kids-alpha-btn { min-width: 65px; height: 38px; font-size: 0.9rem; }
+/* 【小型手機防爆破破版裝置】 320px 以下 */
+@media screen and (max-width: 320px) {
+    .ebook-container { padding: 8px; }
+    .page-navigation { gap: 6px; }
+    .route-links { gap: 6px; }
+    .nav-link { padding: 4px 10px; font-size: 0.85rem; border-radius: 12px; }
+    .control-btn { padding: 4px 10px; font-size: 0.85rem; border-radius: 12px; width: 90%; }
+    .speech-bubble { padding: 6px 12px; }
+    .adventure-track { height: 85px; }
+    .train-token img { width: 45px; }
+    .bear-home-target img { width: 55px; }
+    .letter-button-row { gap: 6px; }
+    .kids-alpha-btn { font-size: 0.9rem; min-height: 44px; }
 }

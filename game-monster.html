@@ -9,16 +9,16 @@
 </head>
 <body>
 
-    <!-- 遊戲主舞台：利用 Grid 約束高度比例，確保底部食物盤永遠不溢出螢幕 -->
     <main class="ebook-container">
         
-        <!-- 跨頁面導覽列 -->
         <nav class="page-navigation">
-            <a href="game-monster.html" class="nav-link active">餵食怪獸</a>
-            <a href="game-train.html" class="nav-link">數字火車</a>
+            <div class="route-links">
+                <a href="game-monster.html" class="nav-link active">餵食怪獸</a>
+                <a href="game-train.html" class="nav-link">數字火車</a>
+            </div>
+            <button id="btn-restart" class="control-btn">重新開始 ↻</button>
         </nav>
 
-        <!-- 關卡指標與怪獸說話提示區 -->
         <header class="game-header">
             <div class="level-indicator">關卡: <span id="monster-level">1</span> / 3</div>
             <div id="target-bubble" class="speech-bubble">
@@ -26,20 +26,15 @@
             </div>
         </header>
 
-        <!-- 正中間的核心：大嘴怪獸拖曳目標舞台 -->
         <section class="stage-zone">
             <div id="monster-character" class="monster-box breathe-animation">
-                <!-- 建議圖片尺寸：PC端 320x320px，手機端 130x130px。去背圖 (PNG) -->
                 <img id="monster-img" src="assets/images/monster/monster-idle.png" alt="大嘴怪獸" draggable="false">
             </div>
         </section>
 
-        <!-- 下方浮動食物傳送帶（拖曳來源區） -->
         <footer class="food-conveyor">
             <p class="guide-text">用手指或滑鼠，把正確的食物拖進怪獸嘴巴裡吧！</p>
-            <div class="food-list">
-                <!-- 由 JavaScript 依據資料庫陣列動態渲染 -->
-            </div>
+            <div class="food-list"></div>
         </footer>
     </main>
 

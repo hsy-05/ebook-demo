@@ -9,16 +9,16 @@
 </head>
 <body>
 
-    <!-- 遊戲主舞台：採用 Grid 骨架約束，防止子元件溢出螢幕 -->
     <main class="ebook-container">
         
-        <!-- 跨頁面導覽列 -->
         <nav class="page-navigation">
-            <a href="game-monster.html" class="nav-link">餵食怪獸</a>
-            <a href="game-train.html" class="nav-link active">數字火車</a>
+            <div class="route-links">
+                <a href="game-monster.html" class="nav-link">餵食怪獸</a>
+                <a href="game-train.html" class="nav-link active">數字火車</a>
+            </div>
+            <button id="btn-restart" class="control-btn">重新開始 ↻</button>
         </nav>
 
-        <!-- 遊戲狀態與題目發問區 -->
         <header class="game-header">
             <div class="level-indicator">關卡: <span id="train-level">1</span> / 3</div>
             <div id="train-bubble" class="speech-bubble">
@@ -26,26 +26,20 @@
             </div>
         </header>
 
-        <!-- 正中間的火車軌道與動畫舞台區：自動伸縮以確保下方按鈕不被遮擋 -->
         <section class="bear-adventure-stage">
             <div class="adventure-track">
-                <!-- 建議圖片尺寸：PC端 110x110px，手機端 55x55px。去背圖 (PNG) -->
                 <div id="train-character" class="train-token">
                     <img src="assets/images/train/train.png" alt="數字火車" draggable="false">
                 </div>
-                <!-- 建議圖片尺寸：PC端 130x130px，手機端 65x65px。去背圖 (PNG) -->
                 <div class="bear-home-target">
                     <img src="assets/images/train/station.png" alt="火車站" draggable="false">
                 </div>
             </div>
         </section>
 
-        <!-- 下方浮動答案選擇區：強制依附於螢幕底部 -->
         <footer class="letter-keyboard-zone">
             <p class="guide-text">點擊下方正確的英文名稱，讓火車前進前進！</p>
-            <div id="options-container" class="letter-button-row">
-                <!-- 由 JavaScript 洗牌演算法隨機動態生成 -->
-            </div>
+            <div id="options-container" class="letter-button-row"></div>
         </footer>
     </main>
 

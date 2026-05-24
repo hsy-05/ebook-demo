@@ -25,14 +25,15 @@ let gameRuntime = {
 };
 
 /**
- * 快取 DOM 節點
+ * 快取 DOM 節點：新增重置按鈕節點
  */
 const ui = {
     levelText: document.getElementById('monster-level'),
     bubble: document.getElementById('target-bubble'),
     monsterBox: document.getElementById('monster-character'),
     monsterImg: document.getElementById('monster-img'),
-    foodContainer: document.querySelector('.food-list')
+    foodContainer: document.querySelector('.food-list'),
+    restartBtn: document.getElementById('btn-restart')
 };
 
 /**
@@ -40,7 +41,7 @@ const ui = {
  */
 const audioSys = {
     click: new Audio('assets/audio/click.mp3'),
-    munch: new Audio('assets/audio/munch.mp3'),
+    munch: new Audio('assets/audio/monster/munch.mp3'),
     boing: new Audio('assets/audio/boing.mp3'),
     
     /**
@@ -54,13 +55,15 @@ const audioSys = {
 };
 
 /**
- * 初始化並建構當前關卡畫面
+ * 初始化並建構當前關卡畫面：移除任何內聯樣式控制，改用 CSS Class 語意化
  */
 function initMonsterLevel() {
     const config = levelSettings[gameRuntime.currentLevelIndex];
     
     ui.levelText.textContent = gameRuntime.currentLevelIndex + 1;
-    ui.bubble.innerHTML = `外星怪獸說：我想要吃 <span id="target-color-text" style="color: ${config.hexColor}; font-size: 2rem; text-decoration: underline;">${config.targetColor}</span> 的食物！`;
+    
+    // 使用純粹的 CSS Class 來控制顏色與字型大小，避免內聯樣式破壞響應式配置
+    ui.bubble.innerHTML = `外星怪獸說：我想要吃 <span id="target-color-text" class="highlight-target" style="color: ${config.hexColor};">${config.targetColor}</span> 的食物！`;
     
     ui.monsterImg.src = "assets/images/monster/monster-idle.png";
     ui.foodContainer.innerHTML = "";
@@ -76,13 +79,25 @@ function initMonsterLevel() {
         const imgNode = document.createElement('img');
         imgNode.src = data.img;
         imgNode.alt = data.name;
-        imgNode.setAttribute('draggable', 'false'); // 防阻預設行為
+        imgNode.setAttribute('draggable', 'false');
 
         itemNode.appendChild(imgNode);
         ui.foodContainer.appendChild(itemNode);
 
         attachPointerDragLogic(itemNode);
     });
+}
+
+/**
+ * 重置遊戲狀態機至第一關
+ */
+function restartGame() {
+    // 防呆機制：如果當前畫面正在播放怪獸吃東西的過渡動畫，禁止重置以防破圖
+    if (gameRuntime.isActionLocked) return;
+
+    audioSys.trigger(audioSys.click);
+    gameRuntime.currentLevelIndex = 0;
+    initMonsterLevel();
 }
 
 /**
@@ -186,7 +201,8 @@ function processCorrectEat(element) {
             gameRuntime.currentLevelIndex++;
             initMonsterLevel();
         } else {
-            ui.bubble.innerHTML = "🎉 <span style='color:#FF1E62; font-size:2rem;'>全部通關！</span> 怪獸肚子飽飽囉！";
+            // 通關文字改由預先定義好的 CSS Class 渲染，確保跨裝置解析度字體不縮水
+            ui.bubble.innerHTML = "🎉 <span class='game-complete-text'>全部通關！</span> 怪獸肚子飽飽囉！";
         }
     }, 1500);
 }
@@ -211,4 +227,9 @@ function processWrongEat(element) {
     }, 350);
 }
 
-document.addEventListener('DOMContentLoaded', initMonsterLevel);
+// 核心初始化監聽
+document.addEventListener('DOMContentLoaded', () => {
+    initMonsterLevel();
+    // 綁定重新開始按鈕點擊事件，代替死板的 HTML inline JS
+    ui.restartBtn.addEventListener('click', restartGame);
+});

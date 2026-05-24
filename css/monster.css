@@ -1,235 +1,353 @@
+/* ==========================================================================
+   1. 全域變數與重設 (Reset & Theme Variables)
+   ========================================================================== */
 :root {
-    --bg-sky: #A1EEF6;
-    --bubble-bg: #FFFFFF;
-    --text-dark: #2C3E50;
-    --border-radius-heavy: 30px;
+    --bg-sky: #cdebf6;
+    --color-primary: #FF9800;
+    --color-primary-shadow: #B33F00;
+    --color-bubble: #FFFFFF;
+    --color-text-dark: #37474F;
+    
+    --color-nav-inactive: #A0CED9;
+    --color-nav-inactive-shadow: #6EA4B0;
+
+    /* 重新開始按鈕專用的繪本風綠色系變數 */
+    --color-restart: #4CAF50;
+    --color-restart-shadow: #388E3C;
+
+    --bg-conveyor: rgba(255, 255, 255, 0.9);
+    --monster-hover-glow: 0 0 55px #FF4081;
+    --color-food-border: #B0BEC5;
+    
+    --font-family: 'Comic Sans MS', 'Chalkboard SE', 'Microsoft JhengHei', sans-serif;
+    --radius-large: 24px;
+    --radius-small: 16px;
+    
+    --shadow-soft: 0 8px 16px rgba(0, 0, 0, 0.08);
+    --shadow-food: 0 8px 0px #CFD8DC;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    user-select: none;
-    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: 'Arial Rounded MT Bold', 'Comic Sans MS', sans-serif;
-    background-color: #222222;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    font-family: var(--font-family);
+    background: linear-gradient(180deg, var(--bg-sky) 0%, #fdf2d1 100%);
+    color: var(--color-text-dark);
     overflow: hidden;
-}
-
-/* 核心容器：改用 Grid 高度嚴格控管，防止元件重疊或出界 */
-.ebook-container {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(180deg, var(--bg-sky) 0%, #E8F9FD 100%);
-    position: relative;
-    display: grid;
-    /* 垂直配置：導覽、提示區、中央怪獸(吃掉剩餘空間)、下方食物盤(靠底浮動) */
-    grid-template-rows: auto auto 1fr auto;
-    padding: 20px;
-    gap: 15px;
-    overflow: hidden;
 }
 
+/* ==========================================================================
+   2. 主舞台骨架與響應式約束 (Layout Container)
+   ========================================================================== */
+.ebook-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    padding: 20px 20px 0 20px; /* 底部設為 0，對齊火車頁面推至最底部的做法 */
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+/* 跨頁面導覽列容器：改為橫向橫跨，為重新開始按鈕騰出彈性擺放空間 */
 .page-navigation {
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    z-index: 100;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    z-index: 10;
+}
+
+/* 將路由網頁連結群組包裹起來 */
+.route-links {
+    display: flex;
+    gap: 15px;
 }
 
 .nav-link {
-    background-color: #9E9E9E;
+    background-color: var(--color-nav-inactive);
     color: white;
     text-decoration: none;
     padding: 10px 25px;
     font-size: 1.3rem;
     font-weight: bold;
     border-radius: 20px;
-    box-shadow: 0 5px 0px #757575;
+    box-shadow: 0 5px 0px var(--color-nav-inactive-shadow);
     transition: all 0.2s ease;
 }
 
 .nav-link.active {
-    background-color: #FF5722;
-    box-shadow: 0 5px 0px #B33F00;
+    background-color: var(--color-primary);
+    box-shadow: 0 5px 0px var(--color-primary-shadow);
     transform: translateY(-2px);
 }
 
+/* 重新開始控制按鈕：採用與導覽列同步的 3D 立體剪紙風格 */
+.control-btn {
+    background-color: var(--color-restart);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 20px;
+    box-shadow: 0 5px 0px var(--color-restart-shadow);
+    cursor: pointer;
+    font-family: var(--font-family);
+    transition: all 0.15s ease;
+}
+
+/* 按鈕點擊或觸碰時的下壓立體反饋 */
+.control-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0px var(--color-restart-shadow);
+}
+
+/* ==========================================================================
+   3. 遊戲狀態與題目發問區 (Header & Speech Bubble)
+   ========================================================================== */
 .game-header {
     width: 100%;
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
 }
 
 .level-indicator {
-    background-color: var(--text-dark);
-    color: #FFFFFF;
-    padding: 3px 12px;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    background-color: var(--color-primary);
+    color: white;
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 .speech-bubble {
-    background: var(--bubble-bg);
-    border: 5px solid var(--text-dark);
-    padding: 12px 25px;
-    border-radius: var(--border-radius-heavy);
-    font-size: 1.6rem;
+    background-color: var(--color-bubble);
+    border-radius: var(--radius-large);
+    padding: 15px 30px;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: var(--text-dark);
-    box-shadow: 0 6px 0px rgba(0,0,0,0.1);
-    text-align: center;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    max-width: 90%;
+    border: 3px solid #ECEFF1;
+}
+
+/* 徹底移除原本寫在 JS 裡的 inline style，全部收納回 CSS 語意化類別 */
+.highlight-target {
+    font-size: 2rem;
+    text-decoration: underline;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+/* 全部通關時，由 JS 賦予的特殊大彩蛋字體樣式 */
+.game-complete-text {
+    color: #FF1E62;
+    font-size: 2rem;
+    font-weight: 900;
 }
 
 #target-color-text {
-    font-size: 2rem;
-    text-decoration: underline;
+    font-weight: 900;
+    letter-spacing: 1px;
 }
 
-/* 怪獸放置舞台：在 Grid 約束下，自動縮減內部圖片大小，不推擠上下區塊 */
+/* ==========================================================================
+   4. 正中間的核心：大嘴怪獸拖曳目標舞台 (Monster Target Zone)
+   ========================================================================== */
 .stage-zone {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
-    height: 100%;
-    overflow: hidden;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    min-height: 0; /* 關鍵防爆：允許內容物在 Flex 容器內縮小，不撐破外殼 */
 }
 
+/* 將預設尺寸改為更平穩自適應的 260px，保留垂直安全預算給下方區塊 */
 .monster-box {
-    width: 320px;
-    height: 320px;
+    width: 260px;
+    height: 260px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    transition: transform 0.2s ease;
+    justify-content: center;
+    border-radius: 50%;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease;
 }
 
 .monster-box img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
+    user-select: none;
 }
 
 .monster-box.target-hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
+    filter: drop-shadow(var(--monster-hover-glow));
 }
 
-/* 下方食物盒：利用 align-self 讓區塊在手機板上完美靠底浮動 */
+/* ==========================================================================
+   5. 下方食物傳送帶與拖曳物件 (Food Conveyor & Drag Items)
+   ========================================================================== */
 .food-conveyor {
     width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.85);
-    border: 4px solid var(--text-dark);
-    border-radius: var(--border-radius-heavy);
-    padding: 12px;
     text-align: center;
-    align-self: end; 
+    background-color: var(--bg-conveyor);
+    padding: 15px;
+    border-radius: var(--radius-large) var(--radius-large) 0 0;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    z-index: 5;
 }
 
 .guide-text {
     font-size: 1.1rem;
-    color: #555;
-    margin-bottom: 8px;
+    color: #546E7A;
+    margin-bottom: 12px; /* 稍微縮小外距防破版 */
+    font-weight: bold;
 }
 
 .food-list {
     display: flex;
     justify-content: center;
-    gap: 25px;
     align-items: center;
-    min-height: 110px;
+    gap: 30px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 95px; /* 優化高度邊界 */
 }
 
+/* 配合一般筆電 100% 縮放縮減為 95px 基準，維持與火車按鈕相近的視覺比重 */
 .food-item {
-    width: 90px;
-    height: 90px;
+    width: 95px;
+    height: 95px;
+    background-color: #FFFFFF;
+    border: 3px solid var(--color-food-border);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-food);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: grab;
     touch-action: none;
-    z-index: 20;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.food-item:active {
+    cursor: grabbing;
+    transform: scale(1.15) translateY(-5px);
+    box-shadow: 0 15px 25px rgba(55, 71, 79, 0.3);
+    z-index: 999;
 }
 
 .food-item img {
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
     object-fit: contain;
 }
 
+/* ==========================================================================
+   6. 動態特效與動畫庫 (Animations)
+   ========================================================================== */
 .breathe-animation {
-    animation: breathe 2.5s ease-in-out infinite alternate;
+    animation: monsterBreathe 3s ease-in-out infinite;
 }
 
-@keyframes breathe {
-    0% { transform: scale(1) translateY(0); }
-    100% { transform: scale(1.04) translateY(-6px); }
+@keyframes monsterBreathe {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
 
 /* ==========================================================================
-   響應式中斷點 (4K - 320px 完整防禦)
+   7. 全方位斷點響應式設計 (RWD Media Queries)
    ========================================================================== */
 
-/* 4K 超大型螢幕 */
-@media (min-width: 2560px) {
-    .ebook-container { max-width: 1920px; max-height: 1080px; margin: auto; border-radius: 20px; gap: 25px; }
-    .speech-bubble { font-size: 2.5rem; }
-    .monster-box { width: 450px; height: 450px; }
-    .food-item { width: 130px; height: 130px; }
+/* 【4K 超大型螢幕】 2560px 以上 */
+@media screen and (min-width: 2560px) {
+    .ebook-container { max-width: 2200px; padding: 60px 60px 0 60px; }
+    .speech-bubble { font-size: 2.5rem; padding: 30px 60px; }
+    .monster-box { width: 520px; height: 520px; }
+    .food-conveyor { padding: 40px; }
+    .food-list { gap: 50px; max-width: 1200px; min-height: 220px; }
+    .food-item { width: 200px; height: 200px; border-width: 5px; box-shadow: 0 12px 0px #CFD8DC; }
+    .food-item:active { box-shadow: 0 25px 40px rgba(55, 71, 79, 0.3); }
+    .guide-text { font-size: 2rem; margin-bottom: 30px; }
+    .level-indicator { font-size: 2rem; }
+    .nav-link, .control-btn { padding: 16px 40px; font-size: 2rem; border-radius: 35px; box-shadow: 0 10px 0px var(--color-nav-inactive-shadow); }
+    .nav-link.active { box-shadow: 0 10px 0px var(--color-primary-shadow); }
+    .control-btn { box-shadow: 0 10px 0px var(--color-restart-shadow); }
 }
 
-/* 大型筆記型電腦 */
-@media (max-width: 1440px) {
+/* 【大型筆記型電腦】 1440px 階層 */
+@media screen and (max-width: 1440px) {
     .monster-box { width: 280px; height: 280px; }
+    .food-item { width: 100px; height: 100px; }
 }
 
-/* 筆記型電腦 */
-@media (max-width: 1024px) {
-    .speech-bubble { font-size: 1.4rem; }
-    .monster-box { width: 250px; height: 250px; }
+/* 【一般筆記型電腦】 1024px 以下 */
+@media screen and (max-width: 1024px) {
+    .speech-bubble { font-size: 1.3rem; }
+    .monster-box { width: 230px; height: 230px; }
+    .food-item { width: 90px; height: 90px; }
+    .nav-link, .control-btn { font-size: 1.1rem; padding: 8px 20px; }
 }
 
-/* 平板電腦 */
-@media (max-width: 768px) {
-    .ebook-container { padding: 12px; gap: 10px; }
-    .speech-bubble { font-size: 1.2rem; }
-    .monster-box { width: 220px; height: 220px; }
-    .food-item { width: 75px; height: 75px; }
-    .food-list { min-height: 95px; }
+/* 【平板電腦】 768px 以下 */
+@media screen and (max-width: 768px) {
+    .ebook-container { padding: 15px 15px 0 15px; }
+    .monster-box { width: 200px; height: 200px; }
+    .food-list { gap: 20px; min-height: 90px; }
+    .food-item { width: 85px; height: 85px; box-shadow: 0 6px 0px #CFD8DC; }
 }
 
-/* 大型手機 (防遮擋關鍵縮減) */
-@media (max-width: 425px) {
-    .ebook-container { padding: 8px; gap: 8px; }
-    .nav-link { font-size: 1rem; padding: 8px 16px; border-radius: 15px; }
-    .speech-bubble { font-size: 1rem; padding: 8px 15px; border-width: 3px; border-radius: 20px; }
-    #target-color-text { font-size: 1.3rem; }
-    .monster-box { width: 140px; height: 140px; } /* 縮小怪獸，清出剩餘高度給底部的食物盤 */
-    .food-conveyor { padding: 10px; border-width: 3px; border-radius: 20px; }
-    .guide-text { font-size: 0.9rem; margin-bottom: 6px; }
-    .food-list { min-height: 60px; gap: 15px; }
-    .food-item { width: 50px; height: 50px; } /* 縮小食物，防止小手機高度塞不下 */
+/* 【大型手機】 425px 以下 */
+@media screen and (max-width: 425px) {
+    .page-navigation { flex-direction: column; gap: 10px; }
+    .route-links { width: 100%; justify-content: center; }
+    .control-btn { width: 80%; text-align: center; padding: 6px 15px; font-size: 1rem; }
+    .speech-bubble { font-size: 1.1rem; padding: 10px 20px; }
+    .monster-box { width: 140px; height: 140px; }
+    .food-list { gap: 12px; min-height: 80px; }
+    .food-item { width: 75px; height: 75px; border-width: 2px; box-shadow: 0 5px 0px #CFD8DC; }
+    .guide-text { font-size: 0.9rem; margin-bottom: 8px; }
+    .nav-link { font-size: 1rem; padding: 6px 15px; }
 }
 
-/* 中型手機 */
-@media (max-width: 375px) {
-    .monster-box { width: 130px; height: 130px; }
-    .food-item { width: 45px; height: 45px; }
+/* 【中型手機】 375px 以下 */
+@media screen and (max-width: 375px) {
+    .speech-bubble { font-size: 1rem; }
+    .monster-box { width: 125px; height: 125px; }
+    .food-item { width: 70px; height: 70px; }
+    .level-indicator { font-size: 1rem; }
 }
 
-/* 小型手機 */
-@media (max-width: 320px) {
-    .ebook-container { gap: 5px; }
-    .speech-bubble { font-size: 0.85rem; padding: 6px 12px; }
+/* 【小型手機防爆破破版裝置】 320px 以下 */
+@media screen and (max-width: 320px) {
+    .ebook-container { padding: 8px 8px 0 8px; }
+    .page-navigation { gap: 6px; }
+    .route-links { gap: 6px; }
+    .nav-link { padding: 4px 10px; font-size: 0.85rem; border-radius: 12px; }
+    .control-btn { padding: 4px 10px; font-size: 0.85rem; border-radius: 12px; width: 90%; }
+    .speech-bubble { padding: 6px 12px; }
     .monster-box { width: 110px; height: 110px; }
-    .food-list { min-height: 50px; gap: 10px; }
-    .food-item { width: 40px; height: 40px; }
+    .food-list { gap: 8px; min-height: 70px; }
+    .food-item { width: 62px; height: 62px; box-shadow: 0 4px 0px #CFD8DC; }
 }
