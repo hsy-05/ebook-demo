@@ -225,7 +225,7 @@ body {
     box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     z-index: 5;
     /* 新增底部安全邊距，應對沒有 dvh 降級時的環境保護 */
-    padding-bottom: calc(15px + env(safe-area-inset-bottom)); 
+    padding-bottom: calc(35px + env(safe-area-inset-bottom));
 }
 
 .guide-text {
@@ -334,7 +334,7 @@ body {
     .food-item { width: 85px; height: 85px; box-shadow: 0 6px 0px #CFD8DC; }
 }
 
-/* 【大型手機】 425px 以下（涵蓋 S23+ 直向操作環境） */
+/* 【大型手機】 425px 以下 */
 @media screen and (max-width: 425px) {
     .page-navigation { flex-direction: column; gap: 10px; }
     .route-links { width: 100%; justify-content: center; }

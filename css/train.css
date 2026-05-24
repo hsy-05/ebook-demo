@@ -242,7 +242,7 @@ body {
     border-radius: var(--radius-large) var(--radius-large) 0 0;
     box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     /* 針對不支援 dvh 的極少數老舊設備進行底部安全區域退讓保護 */
-    padding-bottom: calc(15px + env(safe-area-inset-bottom));
+    padding-bottom: calc(35px + env(safe-area-inset-bottom));
 }
 
 .guide-text {
