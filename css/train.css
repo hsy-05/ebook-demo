@@ -36,7 +36,9 @@ body {
     color: var(--color-text-dark);
     overflow: hidden;
     width: 100vw;
+    /* 採用 dvh 確保在手機瀏覽器選單彈出時，背景範圍能自動同步校準 */
     height: 100vh;
+    height: 100dvh;
 }
 
 /* ==========================================================================
@@ -48,7 +50,9 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    /* 使用 dvh 動態視高，自動扣除三星與 Chrome 等手機瀏覽器的動態網址列與底欄高度 */
     height: 100vh;
+    height: 100dvh;
     padding: 20px 20px 0 20px;
     max-width: 1440px;
     margin: 0 auto;
@@ -166,6 +170,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 20px 0;
+    min-height: 0; /* 允許主舞台在手機高度不夠時安全壓縮，不推擠下方按鈕區 */
 }
 
 .adventure-track {
@@ -189,6 +194,11 @@ body {
     border-radius: 4px;
 }
 
+/* 建議小熊火車圖片尺寸：
+   - 寬高比例約 4:3 橫式或依火車造型去背
+   - 去背 PNG 圖檔
+   - 基礎解析度建議：220px * 165px 
+*/
 .train-token {
     position: absolute;
     bottom: 25px;
@@ -203,6 +213,11 @@ body {
     object-fit: contain;
 }
 
+/* 建議小熊家鄉目標圖片尺寸：
+   - 寬高比例約 1:1 正方形或與火車視覺等高
+   - 去背 PNG 圖檔
+   - 基礎解析度建議：260px * 260px 
+*/
 .bear-home-target {
     position: absolute;
     bottom: 25px;
@@ -226,6 +241,8 @@ body {
     padding: 15px;
     border-radius: var(--radius-large) var(--radius-large) 0 0;
     box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    /* 針對不支援 dvh 的極少數老舊設備進行底部安全區域退讓保護 */
+    padding-bottom: calc(15px + env(safe-area-inset-bottom));
 }
 
 .guide-text {
@@ -297,7 +314,7 @@ body {
 
 /* 【4K 超大型螢幕】 2560px 以上 */
 @media screen and (min-width: 2560px) {
-    .ebook-container { max-width: 2200px; padding: 60px; }
+    .ebook-container { max-width: 2200px; padding: 60px 60px 0 60px; }
     .speech-bubble { font-size: 2.5rem; padding: 30px 60px; }
     #target-number-display { font-size: 4rem; }
     .adventure-track { height: 260px; }
@@ -322,7 +339,7 @@ body {
 
 /* 【平板電腦】 768px 以下 */
 @media screen and (max-width: 768px) {
-    .ebook-container { padding: 15px; }
+    .ebook-container { padding: 15px 15px 0 15px; }
     .adventure-track { height: 130px; }
     .train-token { bottom: 15px; }
     .train-token img { width: 80px; }
@@ -331,18 +348,21 @@ body {
     .kids-alpha-btn { font-size: 1.4rem; min-height: 55px; }
 }
 
-/* 【大型手機】 425px 以下 */
+/* 【大型手機】 425px 以下（適用於 S23+ 垂直操作環境） */
 @media screen and (max-width: 425px) {
     .page-navigation { flex-direction: column; gap: 10px; }
     .route-links { width: 100%; justify-content: center; }
     .control-btn { width: 80%; text-align: center; padding: 6px 15px; font-size: 1rem; }
     .speech-bubble { font-size: 1.1rem; padding: 10px 20px; }
     #target-number-display { font-size: 1.6rem; }
-    .adventure-track { height: 100px; }
-    .train-token { bottom: 10px; }
-    .train-token img { width: 55px; }
-    .bear-home-target { bottom: 10px; }
-    .bear-home-target img { width: 65px; }
+    
+    /* 引入高度上限安全閥，防止軌道在工具列擠壓時強佔垂直空間 */
+    .adventure-track { height: 95px; max-height: 16vh; }
+    
+    .train-token { bottom: 8px; }
+    .train-token img { width: 52px; }
+    .bear-home-target { bottom: 8px; }
+    .bear-home-target img { width: 62px; }
     .letter-button-row { gap: 10px; }
     .kids-alpha-btn { font-size: 1.1rem; min-height: 50px; }
     .guide-text { font-size: 0.9rem; margin-bottom: 8px; }
@@ -358,15 +378,15 @@ body {
 
 /* 【小型手機防爆破破版裝置】 320px 以下 */
 @media screen and (max-width: 320px) {
-    .ebook-container { padding: 8px; }
+    .ebook-container { padding: 8px 8px 0 8px; }
     .page-navigation { gap: 6px; }
     .route-links { gap: 6px; }
     .nav-link { padding: 4px 10px; font-size: 0.85rem; border-radius: 12px; }
     .control-btn { padding: 4px 10px; font-size: 0.85rem; border-radius: 12px; width: 90%; }
     .speech-bubble { padding: 6px 12px; }
-    .adventure-track { height: 85px; }
-    .train-token img { width: 45px; }
-    .bear-home-target img { width: 55px; }
+    .adventure-track { height: 80px; }
+    .train-token img { width: 42px; }
+    .bear-home-target img { width: 52px; }
     .letter-button-row { gap: 6px; }
-    .kids-alpha-btn { font-size: 0.9rem; min-height: 44px; }
+    .kids-alpha-btn { font-size: 0.9rem; min-height: 42px; }
 }
