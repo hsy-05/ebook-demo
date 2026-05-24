@@ -1,0 +1,225 @@
+:root {
+    --bg-space: #1A1A2E;
+    --bubble-bg: #FFFFFF;
+    --text-dark: #2C3E50;
+    --border-radius-heavy: 30px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    font-family: 'Arial Rounded MT Bold', 'Comic Sans MS', sans-serif;
+    background-color: #222222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.ebook-container {
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle, #222831 0%, var(--bg-space) 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    overflow: hidden;
+}
+
+.page-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+    z-index: 100;
+}
+
+.nav-link {
+    background-color: #9E9E9E;
+    color: white;
+    text-decoration: none;
+    padding: 10px 25px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 20px;
+    box-shadow: 0 5px 0px #757575;
+    transition: all 0.2s ease;
+}
+
+.nav-link.active {
+    background-color: #00ADB5;
+    box-shadow: 0 5px 0px #006064;
+    transform: translateY(-2px);
+}
+
+.game-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.level-indicator {
+    background-color: #00ADB5;
+    color: #FFFFFF;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
+
+.speech-bubble {
+    background: var(--bubble-bg);
+    border: 5px solid #00ADB5;
+    padding: 12px 25px;
+    border-radius: var(--border-radius-heavy);
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--text-dark);
+    box-shadow: 0 6px 0px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+#target-number-display {
+    font-size: 2.3rem;
+    color: #FF5722;
+    background: #FFF5E4;
+    padding: 0 15px;
+    border-radius: 10px;
+}
+
+.bear-adventure-stage {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0 40px;
+}
+
+.adventure-track {
+    width: 100%;
+    max-width: 800px;
+    height: 100px;
+    background-color: #393E46;
+    border: 6px solid #00ADB5;
+    border-radius: 50px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-shadow: inset 0 6px 10px rgba(0,0,0,0.5);
+}
+
+.train-token {
+    width: 110px;
+    height: 110px;
+    position: absolute;
+    left: 20px;
+    transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+}
+
+.train-token img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.bear-home-target {
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    right: -20px;
+    top: -20px;
+}
+
+.bear-home-target img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.letter-keyboard-zone {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 4px solid #00ADB5;
+    border-radius: var(--border-radius-heavy);
+    padding: 15px;
+    text-align: center;
+}
+
+.guide-text {
+    font-size: 1.1rem;
+    color: #EEEEEE;
+    margin-bottom: 8px;
+}
+
+.letter-button-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    min-height: 80px;
+    align-items: center;
+}
+
+.kids-alpha-btn {
+    min-width: 140px;
+    height: 70px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    background-color: #FFFFFF;
+    color: #393E46;
+    border: 5px solid #00ADB5;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 6px 0px #006064;
+    transition: all 0.1s ease;
+}
+
+.kids-alpha-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0px #006064;
+}
+
+.shake-animation {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
+}
+
+/* ==========================================================================
+   響應式中斷點 (4K - 320px)
+   ========================================================================== */
+@media (min-width: 2560px) {
+    .ebook-container { max-width: 1920px; max-height: 1080px; margin: auto; border-radius: 20px; }
+    .speech-bubble { font-size: 2.5rem; }
+    .train-token { width: 140px; height: 140px; }
+    .kids-alpha-btn { min-width: 180px; height: 90px; font-size: 2.5rem; }
+}
+@media (max-width: 768px) {
+    .speech-bubble { font-size: 1.2rem; }
+    .train-token { width: 80px; height: 80px; }
+    .kids-alpha-btn { min-width: 100px; height: 60px; font-size: 1.3rem; }
+}
+@media (max-width: 425px) {
+    .nav-link { font-size: 1rem; padding: 8px 16px; }
+    .speech-bubble { font-size: 1rem; }
+    .train-token { width: 60px; height: 60px; }
+    .kids-alpha-btn { min-width: 80px; height: 50px; font-size: 1.1rem; border-width: 3px; }
+}
+@media (max-width: 320px) {
+    .speech-bubble { font-size: 0.85rem; }
+    .letter-button-row { gap: 10px; }
+}

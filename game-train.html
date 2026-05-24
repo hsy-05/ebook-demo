@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>數字火車冒險 - 幼兒互動電子書</title>
+    <link rel="stylesheet" href="css/train.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+
+    <main class="ebook-container">
+        <!-- 跨頁面導覽列 -->
+        <nav class="page-navigation">
+            <a href="game-monster.html" class="nav-link">餵食怪獸</a>
+            <a href="game-train.html" class="nav-link active">數字火車</a>
+        </nav>
+
+        <header class="game-header">
+            <div class="level-indicator">關卡: <span id="train-level">1</span> / 3</div>
+            <div id="train-bubble" class="speech-bubble">
+                請找出正確的數字單字：<span id="target-number-display">12</span>
+            </div>
+        </header>
+
+        <section class="bear-adventure-stage">
+            <div class="adventure-track">
+                <!-- 建議圖片尺寸：130x130px 去背圖。火車列車 -->
+                <div id="train-character" class="train-token">
+                    <img src="assets/images/train/train.png" alt="數字火車" draggable="false">
+                </div>
+                <!-- 建議圖片尺寸：150x150px 去背圖。終點火車站 -->
+                <div class="bear-home-target">
+                    <img src="assets/images/train/station.png" alt="火車站" draggable="false">
+                </div>
+            </div>
+        </section>
+
+        <footer class="letter-keyboard-zone">
+            <p class="guide-text">點擊下方正確的英文名稱，讓火車前進前進！</p>
+            <div id="options-container" class="letter-button-row">
+                <!-- 由 JavaScript 洗牌演算法隨機動態生成 -->
+            </div>
+        </footer>
+    </main>
+
+    <script src="js/train.js"></script>
+</body>
+</html>

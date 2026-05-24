@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>怪獸的肚子餓扁了！ - 幼兒互動電子書</title>
+    <link rel="stylesheet" href="css/monster.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+
+    <main class="ebook-container">
+        <!-- 跨頁面導覽列 -->
+        <nav class="page-navigation">
+            <a href="game-monster.html" class="nav-link active">餵食怪獸</a>
+            <a href="game-train.html" class="nav-link">數字火車</a>
+        </nav>
+
+        <header class="game-header">
+            <div class="level-indicator">關卡: <span id="monster-level">1</span> / 3</div>
+            <div id="target-bubble" class="speech-bubble">
+                外星怪獸說：我想要吃 <span id="target-color-text">RED</span> 的食物！
+            </div>
+        </header>
+
+        <section class="stage-zone">
+            <div id="monster-character" class="monster-box breathe-animation">
+                <!-- 建議圖片尺寸：450x450px 去背圖 -->
+                <img id="monster-img" src="assets/images/monster/monster-idle.png" alt="大嘴怪獸" draggable="false">
+            </div>
+        </section>
+
+        <footer class="food-conveyor">
+            <p class="guide-text">用手指或滑鼠，把正確的食物拖進怪獸嘴巴裡吧！</p>
+            <div class="food-list">
+                <!-- 由 JavaScript 依據優化後的資料庫動態渲染 -->
+            </div>
+        </footer>
+    </main>
+
+    <script src="js/monster.js"></script>
+</body>
+</html>

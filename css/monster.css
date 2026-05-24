@@ -1,0 +1,190 @@
+:root {
+    --bg-sky: #A1EEF6;
+    --bubble-bg: #FFFFFF;
+    --text-dark: #2C3E50;
+    --border-radius-heavy: 30px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    font-family: 'Arial Rounded MT Bold', 'Comic Sans MS', sans-serif;
+    background-color: #222222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.ebook-container {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, var(--bg-sky) 0%, #E8F9FD 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    overflow: hidden;
+}
+
+.page-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+    z-index: 100;
+}
+
+.nav-link {
+    background-color: #9E9E9E;
+    color: white;
+    text-decoration: none;
+    padding: 10px 25px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 20px;
+    box-shadow: 0 5px 0px #757575;
+    transition: all 0.2s ease;
+}
+
+.nav-link.active {
+    background-color: #FF5722;
+    box-shadow: 0 5px 0px #B33F00;
+    transform: translateY(-2px);
+}
+
+.game-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.level-indicator {
+    background-color: var(--text-dark);
+    color: #FFFFFF;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
+
+.speech-bubble {
+    background: var(--bubble-bg);
+    border: 5px solid var(--text-dark);
+    padding: 12px 25px;
+    border-radius: var(--border-radius-heavy);
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--text-dark);
+    box-shadow: 0 6px 0px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+#target-color-text {
+    font-size: 2rem;
+    text-decoration: underline;
+}
+
+.stage-zone {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.monster-box {
+    width: 320px;
+    height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.monster-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.monster-box.target-hover {
+    transform: scale(1.2);
+}
+
+.food-conveyor {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    border: 4px solid var(--text-dark);
+    border-radius: var(--border-radius-heavy);
+    padding: 12px;
+    text-align: center;
+}
+
+.guide-text {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.food-list {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    align-items: center;
+    min-height: 110px;
+}
+
+.food-item {
+    width: 90px;
+    height: 90px;
+    cursor: grab;
+    touch-action: none;
+    z-index: 20;
+}
+
+.food-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.breathe-animation {
+    animation: breathe 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes breathe {
+    0% { transform: scale(1) translateY(0); }
+    100% { transform: scale(1.04) translateY(-6px); }
+}
+
+/* ==========================================================================
+   響應式中斷點 (4K - 320px)
+   ========================================================================== */
+@media (min-width: 2560px) {
+    .ebook-container { max-width: 1920px; max-height: 1080px; margin: auto; border-radius: 20px; }
+    .speech-bubble { font-size: 2.5rem; }
+    .monster-box { width: 450px; height: 450px; }
+    .food-item { width: 130px; height: 130px; }
+}
+@media (max-width: 1440px) { .monster-box { width: 280px; height: 280px; } }
+@media (max-width: 1024px) { .speech-bubble { font-size: 1.4rem; } }
+@media (max-width: 768px) { .monster-box { width: 220px; height: 220px; } }
+@media (max-width: 425px) {
+    .nav-link { font-size: 1rem; padding: 8px 16px; }
+    .speech-bubble { font-size: 1rem; }
+    .monster-box { width: 180px; height: 180px; }
+    .food-item { width: 65px; height: 65px; }
+}
+@media (max-width: 375px) { .monster-box { width: 150px; height: 150px; } }
+@media (max-width: 320px) {
+    .speech-bubble { font-size: 0.85rem; padding: 6px 12px; }
+    .monster-box { width: 120px; height: 120px; }
+}
