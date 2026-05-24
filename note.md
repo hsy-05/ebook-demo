@@ -1,13 +1,70 @@
-音效下載來源 (Pixabay)：
+# 幼兒電子書互動遊戲專案開發筆記
 
-通用點擊音效： UI Click -> 存為 click.mp3
-    https://pixabay.com/sound-effects/search/click/
+## 🛠️ 全站共用核心模組 (Cross-Page Core Modules)
+* **全站共用音訊管理器 (`js/audio-manager.js`)**
+    * **背景音樂無縫接軌**：利用 `localStorage` 跨頁面即時同步 `background.mp3` 的播放秒數（時間戳），解決多頁面網頁（MPA）跳轉時音樂中斷並重頭播放的痛點。
+    * **點擊音效收歸管理**：外曝全域單例物件 `window.EbookAudio.playClick()`，供全站所有頁面的互動按鈕點擊時統一調用，徹底消除重複宣告。
+    * **現代瀏覽器自動播放防禦政策處理**：捕捉播放失敗的 Promise，自動建立全域點擊解鎖監聽（`{ once: true }`），確保在行動端與主流瀏覽器安全發聲。
 
-餵食成功（咀嚼聲）： Munch/Chewing -> 存為 munch.mp3
-https://pixabay.com/sound-effects/search/munch/
+---
 
-餵食錯誤（彈回聲）： Boing -> 存為 boing.mp3
-https://pixabay.com/sound-effects/search/boing/
+## 📄 各頁面功能與業務邏輯 (Page-Specific Logic)
 
+### 1. 幼兒電子書首頁專案 (`game-stage` / `js/home.js`)
+* **開場雲朵迎賓特效**：DOM 載入後延遲 200 毫秒動態注入 `is-loaded` 類別，透過純 CSS 驅動雲朵朝兩側散開的流暢過場動畫。
+* **安全導頁防呆機制**：點擊「開始遊戲」按鈕時，立即停用按鈕並鎖定滑鼠事件（`pointer-events: none`），阻絕幼兒連續快點造成頁面崩潰，並於點擊音效播放 500 毫秒後安全跳轉至怪獸遊戲頁。
 
-英文單字配音：由於 Pixabay 較少純英文單字配音，建議面試展示時先用通用點擊音效代替，或者你自行用手機錄製 apple.mp3, banana.mp3 放入資料夾，這在面試官眼裡會非常有誠意。
+### 2. 外星怪獸餵食遊戲頁 (`game-monster.html` / `js/monster.js`)
+* **資料與邏輯完全分離**：使用食物字典（Master Data）與關卡配置表（Level Settings）集中管理關卡邏輯，拒絕死資料。
+* **高靈敏指標拖曳運算 (Pointer Events)**：使用 `setPointerCapture` 鎖定指針，全面支援滑鼠與行動裝置手勢觸控拖曳食物，並透過幾何邊界運算（`getBoundingClientRect`）進行精準的碰撞偵測。
+* **動態回饋與狀態鎖**：
+    * **餵食正確**：更換怪獸咀嚼表情，播放專屬嚼食音效（`munch.mp3`），鎖定操作並於 1.5 秒後自動步進至下一關。
+    * **餵食錯誤**：播放彈回音效（`boing.mp3`），透過貝茲曲線（Cubic-bezier）將食物流暢彈回原位。
+* **語意化渲染與重置**：過關文字改由 CSS Class 控制以維護響應式字體。提供「重新開始」功能並具備動畫中防鎖機制。
+
+### 3. 數字火車遊戲頁 (`game-train.html` / `js/train.js`)
+* **動態干擾選項演算法**：隨機抽選 1~20 目標數字，並利用 Fisher-Yates 洗牌演算法將正確英文單字與兩個干擾單字混合打散，動態渲染為選項按鈕。
+* **火車動態步進與答錯防呆**：
+    * **答對**：火車外觀隨著進度百分比（25% -> 55% -> 80%）流暢移位，播完 `success.mp3` 成功音效後自動換題。
+    * **答錯**：觸發火車搖頭晃動動畫（`shake-animation`），播放 `fail.mp3` 音效，並在 500 毫秒動畫期間鎖定點擊。
+
+ ***
+ ***
+
+## 🛠️ 全站技術架構原則
+- **前後端完整分離**：不使用 HTML inline 屬性（如 `onclick=""` 或 `style=""`），全數採用 W3C 標準事件監聽器與語意化 CSS Class 控管外觀。
+- **高內聚低耦合 (High Cohesion, Low Coupling)**：將全站通用邏輯與頁面專屬商務邏輯拆分，維持程式碼乾淨、好維護、可讀性高。
+- **響應式排版支援 (RWD)**：支援從 4K (2560px) 到小型手機 (320px) 共七大斷點裝置防禦。
+
+---
+
+## 📂 模組與網頁功能清單
+
+### 1. 全站公用基礎建設
+- **檔案**：`js/audio-manager.js`
+- **功能**：
+  - 跨網頁背景音樂（BGM）無縫播放：利用 `localStorage` 跨 HTML 記錄與同步當前播放進度（秒數）。
+  - W3C 自動播放政策防呆：捕捉瀏覽器阻擋政策，自動建立全域首次點擊解鎖監聽。
+  - 全域點擊音效介面：外曝 `window.EbookAudio.playClick()` API 供全站業務邏輯調用，移除各頁面重複的 Audio 實例，節省記憶體效能。
+
+### 2. 首頁 (Welcome Page)
+- **檔案**：`js/home.js`
+- **功能**：
+  - 開場迎賓動畫：利用 200 毫秒延遲緩衝注入 `is-loaded` 類別，驅動雲朵朝兩側散開。
+  - 幼兒行為防防呆：點擊開始後立即啟用 `disabled` 與鎖定 `pointerEvents`，徹底阻絕連續快點造成的頁面崩潰或多次重複跳轉。
+
+### 3. 外星怪獸餵食遊戲 (Monster Feeding Game)
+- **檔案**：`js/monster.js`
+- **功能**：
+  - 資料驅動（Master Data）：使用 `foodDictionary` 與 `levelSettings` 集中管理食物屬性與關卡配置，抽離死資料。
+  - 跨裝置流暢拖曳：使用 W3C `PointerEvent`（含 `setPointerCapture`）完美相容滑鼠拖曳與行動端多指觸控。
+  - 碰撞偵測（Collision Detection）：透過 `getBoundingClientRect()` 進行即時幾何矩形邊界運算，判斷食物是否精準送入怪獸口中。
+  - 狀態鎖（Action Lock）：在餵食過渡動畫播放期間鎖定操作，防止畫面破圖。
+  - 專屬特殊特效音：局部維護 `munch`（嚼食）與 `boing`（彈回）特效。
+
+### 4. 數字火車單字遊戲 (Number Train Game)
+- **檔案**：`js/train.js`
+- **功能**：
+  - 隨機題目與干擾項洗牌：利用 Fisher-Yates 演算法，隨機抽選 1-20 目標數字，並動態組裝另外兩個錯誤單字進行公平洗牌。
+  - 步進式動畫控制：答對時火車會根據目前的關卡進度（25%、55%、80%）進行 CSS 位移動畫。
+  - 防呆搖晃反饋：答錯時火車觸發 `shake-animation` 搖頭晃動，並短暫鎖定操作 500 毫秒防止幼兒瞎猜快點。

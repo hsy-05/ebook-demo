@@ -50,7 +50,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    /* 使用 dvh 動態視高，自動扣除三星與 Chrome 等手機瀏覽器的動態網址列與底欄高度 */
+    /* 使用 dvh 動態視高，自動扣除手機瀏覽器的動態網址列與底欄高度 */
     height: 100vh;
     height: 100dvh;
     padding: 20px 20px 0 20px;
@@ -348,7 +348,7 @@ body {
     .kids-alpha-btn { font-size: 1.4rem; min-height: 55px; }
 }
 
-/* 【大型手機】 425px 以下（適用於 S23+ 垂直操作環境） */
+/* 【大型手機】 425px 以下  */
 @media screen and (max-width: 425px) {
     .page-navigation { flex-direction: column; gap: 10px; }
     .route-links { width: 100%; justify-content: center; }

@@ -1,53 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>怪獸電子書-首頁</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="幼兒互動電子書" />
+    <meta name="description" content="幼兒互動電子書" />
+    <title>幼兒互動電子書</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
+    />
+    <meta name="format-detection" content="telephone=no" />
     <!-- 引入自訂樣式表 -->
-    <link rel="stylesheet" href="css/home.css">
-    <link rel="icon" href="favicon.ico">
-</head>
-<body>
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="icon" href="favicon.ico" />
+  </head>
 
-    <!-- 遊戲主舞台容器：確保所有內容在各解析度下都維持設定比例 -->
+  <body>
+    <!-- 遊戲主舞台容器：確保所有內容在各解析度下都維持設定比例，並採用動態視高防遮擋 -->
     <div class="game-stage">
-        
-        <!-- 背景音樂（可選，預留給防呆機制使用） -->
-        <audio id="bgm-audio" src="assets/sounds/background.mp3" loop></audio>
-        <!-- 點擊按鈕的過場音效 -->
-        <audio id="click-audio" src="assets/sounds/click.mp3"></audio>
 
-        <!-- 雲朵動畫層：開場時會向左右散開 -->
-        <!-- 建議圖片尺寸：寬度至少 1200px / 高度 1080px (PNG 透明背景圖) -->
-        <div class="cloud cloud-left" style="background-image: url('assets/images/cloud.png');"></div>
-        <!-- 建議圖片尺寸：寬度至少 1200px / 高度 1080px (PNG 透明背景圖) -->
-        <div class="cloud cloud-right" style="background-image: url('assets/images/cloud.png');"></div>
+      <!-- 雲朵動畫層：開場時會向左右散開（已將 inline style 圖片移至 CSS 控管，避免裁切） -->
+      <!-- 建議圖片尺寸：寬度至少 1200px / 高度 1080px (PNG 透明背景圖) -->
+      <div class="cloud cloud-left"></div>
+      <!-- 建議圖片尺寸：寬度至少 1200px / 高度 1080px (PNG 透明背景圖) -->
+      <div class="cloud cloud-right"></div>
 
-        <!-- 核心內容區塊：包含怪獸與開始按鈕 -->
-        <main class="main-content">
-            <!-- 怪獸圖示群組 -->
-            <div class="monster-group">
-                <!-- 建議圖片尺寸：400px * 400px (PNG 透明背景) -->
-                <img src="assets/images/monster1.png" alt="黃色小怪獸" class="monster-item">
-                <!-- 建議圖片尺寸：400px * 400px (PNG 透明背景) -->
-                <img src="assets/images/monster2.png" alt="藍色大怪獸" class="monster-item">
-                <!-- 建議圖片尺寸：400px * 400px (PNG 透明背景) -->
-                <img src="assets/images/monster3.png" alt="紅色粉紅怪獸" class="monster-item">
-            </div>
+      <!-- 核心內容區塊：包含怪獸與開始按鈕 -->
+      <main class="main-content">
+        <!-- 怪獸圖示群組 -->
+        <div class="monster-group">
+          <!-- 建議圖片尺寸：400px * 400px (去背 PNG) -->
+          <img
+            src="assets/images/monster1.png"
+            alt="黃色小怪獸"
+            class="monster-item"
+          />
+          <!-- 建議圖片尺寸：400px * 400px (去背 PNG) -->
+          <img
+            src="assets/images/monster2.png"
+            alt="藍色大怪獸"
+            class="monster-item"
+          />
+          <!-- 建議圖片尺寸：400px * 400px (去背 PNG) -->
+          <img
+            src="assets/images/monster3.png"
+            alt="紅色粉紅怪獸"
+            class="monster-item"
+          />
+        </div>
 
-            <!-- 開始按鈕區塊 -->
-            <div class="action-area">
-                <!-- 建議圖片尺寸：350px * 120px (設計成大圖方便幼兒點擊) -->
-                <button type="button" id="btn-start" class="btn-start" aria-label="開始遊戲">
-                    <img src="assets/images/btn-start.png" alt="Start">
-                </button>
-            </div>
-        </main>
-        
+        <!-- 開始按鈕區塊 -->
+        <div class="action-area">
+          <!-- 建議圖片尺寸：350px * 120px (3D 立體去背按鈕圖) -->
+          <button
+            type="button"
+            id="btn-start"
+            class="btn-start"
+            aria-label="開始遊戲"
+          >
+            <img src="assets/images/btn-start.png" alt="Start" />
+          </button>
+        </div>
+      </main>
     </div>
 
     <!-- 引入主要邏輯 JavaScript -->
+     <script src="js/audio-manager.js.js"></script>
     <script src="js/home.js"></script>
-</body>
+  </body>
 </html>

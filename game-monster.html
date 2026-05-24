@@ -1,43 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta charset="utf-8" />
+    <meta name="keywords" content="怪獸的肚子餓扁了！ - 幼兒互動電子書" />
+    <meta name="description" content="怪獸的肚子餓扁了！ - 幼兒互動電子書" />
     <title>怪獸的肚子餓扁了！ - 幼兒互動電子書</title>
-    <link rel="stylesheet" href="css/monster.css">
-    <link rel="icon" href="favicon.ico">
-</head>
-<body>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href="css/monster.css" />
+    <link rel="icon" href="favicon.ico" />
+  </head>
+  <body>
     <main class="ebook-container">
-        
-        <nav class="page-navigation">
-            <div class="route-links">
-                <a href="game-monster.html" class="nav-link active">餵食怪獸</a>
-                <a href="game-train.html" class="nav-link">數字火車</a>
-            </div>
-            <button id="btn-restart" class="control-btn">重新開始 ↻</button>
-        </nav>
+      <nav class="page-navigation">
+        <div class="route-links">
+          <a href="game-monster.html" class="nav-link active">餵食怪獸</a>
+          <a href="game-train.html" class="nav-link">數字火車</a>
+        </div>
+        <button id="btn-restart" class="control-btn">重新開始 ↻</button>
+      </nav>
 
-        <header class="game-header">
-            <div class="level-indicator">關卡: <span id="monster-level">1</span> / 3</div>
-            <div id="target-bubble" class="speech-bubble">
-                外星怪獸說：我想要吃 <span id="target-color-text">RED</span> 的食物！
-            </div>
-        </header>
+      <header class="game-header">
+        <div class="level-indicator">
+          關卡: <span id="monster-level">1</span> / 3
+        </div>
+        <div id="target-bubble" class="speech-bubble">
+          外星怪獸說：我想要吃 <span id="target-color-text">RED</span> 的食物！
+        </div>
+      </header>
 
-        <section class="stage-zone">
-            <div id="monster-character" class="monster-box breathe-animation">
-                <img id="monster-img" src="assets/images/monster/monster-idle.png" alt="大嘴怪獸" draggable="false">
-            </div>
-        </section>
+      <section class="stage-zone">
+        <div id="monster-character" class="monster-box breathe-animation">
+          <img
+            id="monster-img"
+            src="assets/images/monster/monster-idle.png"
+            alt="大嘴怪獸"
+            draggable="false"
+          />
+        </div>
+      </section>
 
-        <footer class="food-conveyor">
-            <p class="guide-text">用手指或滑鼠，把正確的食物拖進怪獸嘴巴裡吧！</p>
-            <div class="food-list"></div>
-        </footer>
+      <footer class="food-conveyor">
+        <p class="guide-text">用手指或滑鼠，把正確的食物拖進怪獸嘴巴裡吧！</p>
+        <div class="food-list"></div>
+      </footer>
     </main>
 
+    <!-- 引入主要邏輯 JavaScript -->
+    <script src="js/audio-manager.js.js"></script>
     <script src="js/monster.js"></script>
-</body>
+  </body>
 </html>
