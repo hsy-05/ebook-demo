@@ -6,8 +6,6 @@ const foodDictionary = {
     apple: { name: "Apple", color: "RED", img: "assets/images/monster/apple.png" },
     banana: { name: "Banana", color: "YELLOW", img: "assets/images/monster/banana.png" },
     broccoli: { name: "Broccoli", color: "GREEN", img: "assets/images/monster/broccoli.png" }
-    // 未來若要新增食物，直接在下方複製格式即可，例如：
-    // grape: { name: "Grape", color: "PURPLE", img: "assets/images/monster/grape.png" }
 };
 
 /**
@@ -18,18 +16,18 @@ const colorHexMap = {
     RED: "#FF2E63",
     YELLOW: "#FFB200",
     GREEN: "#2ECC71"
-    // PURPLE: "#9B59B6" (未來擴充新顏色時在此填寫色碼)
 };
 
 /**
  * 遊戲運存控制器與狀態機
- * 用途：管理目前的關卡計數、設定總關卡上限，並控制動畫播放期間的點擊防呆鎖定
+ * 用途：管理目前的關卡計數、設定總關卡上限、動畫鎖定，並新增紀錄上一次顏色的欄位來防止連續關卡重複
  */
 const gameRuntime = {
     currentLevelIndex: 0,
     maxLevels: 3,          // 未來想增加遊戲關卡數，直接修改這個數字即可
     targetColor: "",       // 每關動態隨機抽選的目標顏色
     targetHexColor: "",    // 每關動態隨機抽選的目標文字色碼
+    lastColor: "",         // 專門記錄上一關的顏色，用來做防止重複的檢查
     isActionLocked: false
 };
 
@@ -68,7 +66,7 @@ const audioSys = {
 
 /**
  * 初始化並建構全新的隨機關卡畫面
- * 用途：隨機抽選本關的目標食物顏色，並將所有的食物選項順序徹底洗牌打散，動態渲染至畫面上
+ * 用途：隨機抽選本關的目標食物顏色（加入迴圈防重複機制），並將所有的食物選項順序徹底洗牌打散，動態渲染至畫面上
  */
 function initMonsterLevel() {
     gameRuntime.isActionLocked = false;
@@ -77,15 +75,24 @@ function initMonsterLevel() {
     // 取得目前字典檔中所有的食物主鍵陣列 (例如: ["apple", "banana", "broccoli"])
     const allFoodIds = Object.keys(foodDictionary);
     
-    // 隨機抽選其中一個食物作為這一關的正確答案題目
-    const randomIndex = Math.floor(Math.random() * allFoodIds.length);
-    const targetFoodId = allFoodIds[randomIndex];
-    
-    // 將隨機選出的食物顏色與對應色碼寫入狀態機
-    gameRuntime.targetColor = foodDictionary[targetFoodId].color;
+    // 宣告選中的食物 ID 變數
+    let targetFoodId = "";
+    let chosenColor = "";
+
+    // 使用最簡單的 do-while 迴圈進行抽選防呆
+    // 用途：如果抽選出來的顏色跟上一關一模一樣，就強制重新抽一次，直到顏色不一樣為止
+    do {
+        const randomIndex = Math.floor(Math.random() * allFoodIds.length);
+        targetFoodId = allFoodIds[randomIndex];
+        chosenColor = foodDictionary[targetFoodId].color;
+    } while (chosenColor === gameRuntime.lastColor);
+
+    // 確定顏色跟上一關不同後，正式寫入狀態機，並更新上一次顏色紀錄
+    gameRuntime.targetColor = chosenColor;
+    gameRuntime.lastColor = chosenColor;
     gameRuntime.targetHexColor = colorHexMap[gameRuntime.targetColor];
     
-    // 將出題區塊的文字更新為隨機挑選出來的顏色，維持純 CSS Class 控制
+    // 將出題區塊的文字更新為隨機挑選出來的顏色，維持原本對應文字的特殊顏色標籤設計
     ui.bubble.innerHTML = `外星怪獸說：我想要吃 <span id="target-color-text" class="highlight-target" style="color: ${gameRuntime.targetHexColor};">${gameRuntime.targetColor}</span> 的食物！`;
     
     // 還原怪獸為預設待機圖 (建議尺寸：400x400 像素透明背景 PNG)
@@ -124,7 +131,7 @@ function initMonsterLevel() {
 
 /**
  * 重置遊戲狀態回到第一關
- * 用途：響應重新開始按鈕，調用全站公用點擊音效，並將狀態機關卡歸零重新出題
+ * 用途：響應重新開始按鈕，調用全站公用點擊音效，並將狀態機關卡與顏色紀錄歸零重新出題
  */
 function restartGame() {
     // 防呆機制：如果正在播放吃東西或失敗彈回的動畫，禁止重置以防止畫面破圖
@@ -136,6 +143,7 @@ function restartGame() {
     }
     
     gameRuntime.currentLevelIndex = 0;
+    gameRuntime.lastColor = ""; // 重置時清空上一次顏色紀錄，確保第一關可以隨機任意出題
     initMonsterLevel();
 }
 
@@ -282,4 +290,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initMonsterLevel();
     // 綁定重新開始按鈕點擊監聽器
     ui.restartBtn.addEventListener('click', restartGame);
-});
+}); 
