@@ -15,7 +15,7 @@ const numberMap = {
  */
 const trainSystem = {
     currentLevel: 0,
-    maxLevels: 13,             // 遊戲總關卡數
+    maxLevels: 5,             // 遊戲總關卡數
     maxWrongOption: 10,        // 遊戲錯誤選項數
     targetNumber: 0,
     correctAnswerString: "",
